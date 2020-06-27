@@ -13,13 +13,13 @@ rm -rf /tmp/${HOST2}
 # Create temp directories to store files that will end up on other hosts.
 mkdir -p /tmp/${HOST0}/ /tmp/${HOST1}/ /tmp/${HOST2}/
 
-ETCDHOSTS=(${HOST0} ${HOST1} ${HOST2})
+ETCDHOSTS=("${HOST0}" "${HOST1}" "${HOST2}")
 NAMES=("kubetc01" "kubetc02" "kubetc03")
 
 for i in "${!ETCDHOSTS[@]}"; do
 HOST=${ETCDHOSTS[$i]}
 NAME=${NAMES[$i]}
-cat << EOF > /tmp/${HOST}/kubeadmcfg.yaml
+cat << EOF > /tmp/"${HOST}"/kubeadmcfg.yaml
 apiVersion: "kubeadm.k8s.io/v1beta2"
 kind: ClusterConfiguration
 etcd:
@@ -65,5 +65,5 @@ kubeadm init phase certs apiserver-etcd-client --config=/tmp/${HOST0}/kubeadmcfg
 # No need to move the certs because they are for HOST0
 
 # clean up certs that should not be copied off this host
-#find /tmp/${HOST2} -name ca.key -type f -delete
-#find /tmp/${HOST1} -name ca.key -type f -delete
+find /tmp/${HOST2} -name ca.key -type f -delete
+find /tmp/${HOST1} -name ca.key -type f -delete

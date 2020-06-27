@@ -1,8 +1,8 @@
 #!/bin/bash
 
-HOST=`hostname -s`
-HOSTLB=`echo $HOST | grep -i kublb | wc -l`
-HOSTETC=`echo $HOST | grep -i kubetc | wc -l`
+HOST=$(hostname -s)
+HOSTLB=$(echo "$HOST" | grep -i -c kublb)
+HOSTETC=$(echo "$HOST" | grep -i -c kubetc)
 
 if [[ $HOSTLB -eq 0 ]]; then #is not lb
     cp -f /opt/kub/k8s.conf /etc/sysctl.d/k8s.conf
@@ -30,8 +30,8 @@ if [[ $HOSTLB -eq 1 ]]; then #is lb
     systemctl disable firewalld
     
     yum install -y haproxy keepalived
-    cp -f /opt/kub/haproxy.cfg.$HOST /etc/haproxy/haproxy.cfg
-    cp -f /opt/kub/keepalived.conf.$HOST /etc/keepalived/keepalived.conf
+    cp -f /opt/kub/haproxy.cfg."$HOST" /etc/haproxy/haproxy.cfg
+    cp -f /opt/kub/keepalived.conf."$HOST" /etc/keepalived/keepalived.conf
     systemctl enable haproxy
     systemctl enable keepalived
 fi
